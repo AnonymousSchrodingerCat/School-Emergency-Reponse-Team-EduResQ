@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>SOS Emergency System</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Arial; background: #f0f2f5; }
+        .header { background: #667eea; color: white; padding: 20px; }
+        .container { max-width: 1200px; margin: 20px auto; padding: 0 20px; }
+        .stats { display: grid; grid-template-columns: repeat(5,1fr); gap: 15px; margin: 20px 0; }
+        .stat-card { background: white; padding: 20px; border-radius: 10px; text-align: center; }
+        .stat-value { font-size: 2rem; font-weight: bold; }
+        #map { height: 400px; margin: 20px 0; border-radius: 10px; }
+        .datalogs { background: white; padding: 20px; border-radius: 10px; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 10px; text-align: left; border-bottom: 1px solid #ddd; }
+        .red { color: #ef4444; }
+        .orange { color: #f97316; }
+        .yellow { color: #eab308; }
+        .whatsapp { background: #25D366; color: white; padding: 5px 15px; border-radius: 20px; display: inline-block; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div style="display: flex; justify-content: space-between;">
+            <h1>SOS Emergency System</h1>
+            <div class="whatsapp">📱 +639307661916</div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="stats" id="stats">Loading stats...</div>
+        <div id="map"></div>
+        <div class="datalogs" id="datalogs">Loading alerts...</div>
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+        const map = L.map('map').setView([14.5995, 120.9842], 15);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+
+        async function loadData() {
+            try {
+                const alerts = await fetch('/api/alerts').then(r => r.json());
+                const stats = await fetch('/api/stats').then(r => r.json());
+
+                document.getElementById('stats').innerHTML = `
+                    <div class="stat-card"><div class
